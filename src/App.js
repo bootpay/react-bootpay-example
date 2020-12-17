@@ -1,6 +1,7 @@
 import './App.css';
+import BootPay from "bootpay-js";
 
-const { BootPay } = window;
+// const { BootPay } = window;
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
 }
 
 function onClickRequest() {
+  // console.log(BootPay);
   // BootPay.request();
   // console.log(BootPay.request);
   BootPay.request({

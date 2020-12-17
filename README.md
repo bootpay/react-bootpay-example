@@ -11,18 +11,7 @@
 ## 부트페이 설치하기 
 
 ```sh
-public/index.html
-```
-
-파일에서 `<head> ... </head>`사이에 부트페이 script를 추가합니다.
-
-
-```sh
-// ...
-<head>
-    <script src="https://cdn.bootpay.co.kr/js/bootpay-3.3.1.min.js" type="application/javascript"></script>
-</head>
-//...
+npm install bootpay-js
 ```
 
 
@@ -30,7 +19,7 @@ public/index.html
 
 
 ```javascript 
-const { BootPay } = window;
+import BootPay from "bootpay-js";
 
 function App() {
   return (
@@ -40,9 +29,7 @@ function App() {
   );
 }
 
-function onClickRequest() {
-  // BootPay.request();
-  // console.log(BootPay.request);
+function onClickRequest() { 
   BootPay.request({
     price: '1000', //실제 결제되는 가격
     application_id: "5b8f6a4d396fa665fdc2b5e7", //부트페이로부터 발급받은 web key 
