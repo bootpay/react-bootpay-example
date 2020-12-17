@@ -1,70 +1,110 @@
-# Getting Started with Create React App
+# 부트페이 소개 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+부트페이는 이니시스, 네이버페이, 카카오페이 등 모든 PG와 결제수단을 간편하게 결제연동 할 수 있습니다. PG나 결제수단 변경시 parameter 만 바꾸면 되며, 더욱 개발하기 쉽도록 인터페이스를 제공합니다.
 
-## Available Scripts
 
-In the project directory, you can run:
+## react-bootpay-example
 
-### `yarn start`
+부트페이의 javascript 파일을 cdn에서 불러와 react 프로젝트에서 사용할 수 있습니다. react에서 어떻게 bootpay.js 를 사용하는지에 대해 다룹니다. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 부트페이 설치하기 
 
-### `yarn test`
+```sh
+public/index.html
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+파일에서 <head></head>사이에 부트페이 script를 추가합니다.
 
-### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```sh
+// ...
+<head>
+    <script src="https://cdn.bootpay.co.kr/js/bootpay-3.3.1.min.js" type="application/javascript"></script>
+</head>
+//...
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 사용하기 
 
-### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```javascript 
+const { BootPay } = window;
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+function App() {
+  return (
+    <div className="box"> 
+    <button onClick={onClickRequest}>부트페이 결제호출</button>
+    </div>
+  );
+}
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+function onClickRequest() {
+  // BootPay.request();
+  // console.log(BootPay.request);
+  BootPay.request({
+    price: '1000', //실제 결제되는 가격
+    application_id: "5b8f6a4d396fa665fdc2b5e7", //부트페이로부터 발급받은 web key 
+    name: '블링블링 마스카라', //결제창에서 보여질 이름
+    pg: 'inicis',
+    method: 'card', //결제수단, 입력하지 않으면 결제수단 선택부터 화면이 시작합니다.
+    show_agree_window: 0, // 부트페이 정보 동의 창 보이기 여부
+    items: [
+      {
+        item_name: '나는 아이템', //상품명
+        qty: 1, //수량
+        unique: '123', //해당 상품을 구분짓는 primary key
+        price: 1000, //상품 단가
+        cat1: 'TOP', // 대표 상품의 카테고리 상, 50글자 이내
+        cat2: '티셔츠', // 대표 상품의 카테고리 중, 50글자 이내
+        cat3: '라운드 티', // 대표상품의 카테고리 하, 50글자 이내
+      }
+    ],
+    user_info: {
+      username: '사용자 이름',
+      email: '사용자 이메일',
+      addr: '사용자 주소',
+      phone: '010-1234-4567'
+    },
+    order_id: '고유order_id_1234', //고유 주문번호로, 생성하신 값을 보내주셔야 합니다.
+    params: {callback1: '그대로 콜백받을 변수 1', callback2: '그대로 콜백받을 변수 2', customvar1234: '변수명도 마음대로'},
+    account_expire_at: '2020-10-25', // 가상계좌 입금기간 제한 ( yyyy-mm-dd 포멧으로 입력해주세요. 가상계좌만 적용됩니다. )
+    extra: {
+        start_at: '2019-05-10', // 정기 결제 시작일 - 시작일을 지정하지 않으면 그 날 당일로부터 결제가 가능한 Billing key 지급
+      end_at: '2022-05-10', // 정기결제 만료일 -  기간 없음 - 무제한
+          vbank_result: 1, // 가상계좌 사용시 사용, 가상계좌 결과창을 볼지(1), 말지(0), 미설정시 봄(1)
+          quota: '0,2,3', // 결제금액이 5만원 이상시 할부개월 허용범위를 설정할 수 있음, [0(일시불), 2개월, 3개월] 허용, 미설정시 12개월까지 허용,
+      theme: 'purple', // [ red, purple(기본), custom ]
+      custom_background: '#00a086', // [ theme가 custom 일 때 background 색상 지정 가능 ]
+      custom_font_color: '#ffffff' // [ theme가 custom 일 때 font color 색상 지정 가능 ]
+    }
+  }).error(function (data) {
+    //결제 진행시 에러가 발생하면 수행됩니다.
+    console.log(data);
+  }).cancel(function (data) {
+    //결제가 취소되면 수행됩니다.
+    console.log(data);
+  }).ready(function (data) {
+    // 가상계좌 입금 계좌번호가 발급되면 호출되는 함수입니다.
+    console.log(data);
+  }).confirm(function (data) {
+    //결제가 실행되기 전에 수행되며, 주로 재고를 확인하는 로직이 들어갑니다.
+    //주의 - 카드 수기결제일 경우 이 부분이 실행되지 않습니다.
+    console.log(data);
+    var enable = true; // 재고 수량 관리 로직 혹은 다른 처리
+    if (enable) {
+      BootPay.transactionConfirm(data); // 조건이 맞으면 승인 처리를 한다.
+    } else {
+      BootPay.removePaymentWindow(); // 조건이 맞지 않으면 결제 창을 닫고 결제를 승인하지 않는다.
+    }
+  }).close(function (data) {
+      // 결제창이 닫힐때 수행됩니다. (성공,실패,취소에 상관없이 모두 수행됨)
+      console.log(data);
+  }).done(function (data) {
+    //결제가 정상적으로 완료되면 수행됩니다
+    //비즈니스 로직을 수행하기 전에 결제 유효성 검증을 하시길 추천합니다.
+    console.log(data);
+  });
+} 
+```
