@@ -14,7 +14,7 @@
 public/index.html
 ```
 
-파일에서 <head></head>사이에 부트페이 script를 추가합니다.
+파일에서 `<head> ... </head>`사이에 부트페이 script를 추가합니다.
 
 
 ```sh
